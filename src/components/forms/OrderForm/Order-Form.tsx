@@ -89,10 +89,14 @@ const OrderForm = () => {
     "11x",
     "12x",
   ];
-
+  const metodoPgto = [
+    { cod: 1, tipo: "à vista"},
+    { cod: 2, tipo: "crediário" },
+    { cod: 3, tipo: "cartão de crédito" },
+  ];
   const setarDados = () => {
     const data = {
-      produto: {nome: selectedProduct.produto, valor: selectedProduct.valor},
+      produto: { nome: selectedProduct.produto, valor: selectedProduct.valor },
       cliente: { nome: selectedClient.nome, endereco: selectedClient.endereco },
       data: selectedDate,
       parcelas: selectedParcelas,
@@ -145,7 +149,6 @@ const OrderForm = () => {
           })}
         </Picker>
 
-        
         <Title>Método de pagamento:</Title>
         <Picker
           selectedValue={metodoPagamento}
@@ -170,23 +173,24 @@ const OrderForm = () => {
           />
         </Picker>
         {metodoPagamento === "crediário" ? (
-            <>
-        <Title>parcelas:</Title>
-        <Picker
-          selectedValue={selectedParcelas}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedParcelas(itemValue)
-          }
-        >
-          {parcelas.map((parcela) => {
-            return (
-              <Picker.Item key={parcela} label={parcela} value={parcela} />
-            );
-          })}
-        </Picker>
-        </>
-        ) : 
-        (<></>)}
+          <>
+            <Title>parcelas:</Title>
+            <Picker
+              selectedValue={selectedParcelas}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedParcelas(itemValue)
+              }
+            >
+              {parcelas.map((parcela) => {
+                return (
+                  <Picker.Item key={parcela} label={parcela} value={parcela} />
+                );
+              })}
+            </Picker>
+          </>
+        ) : (
+          <></>
+        )}
         <Button title="cadastrar" onPress={() => setarDados()} />
       </FormContainer>
     </Container>

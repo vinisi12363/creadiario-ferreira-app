@@ -5,6 +5,6 @@ import OrderForm from '../../components/forms/OrderForm/Order-Form';
 export const Client = ()=>{
 
     return(
-        <OrderForm></OrderForm>
+        <CadastroForm></CadastroForm>
     );
 }
