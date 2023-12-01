@@ -13,7 +13,7 @@ import { Alert } from "react-native";
 
 const OrderForm = () => {
   const [selectedProduct, setSelectedProduct] = useState({
-    produto: "",
+    nome: "",
     valor: 0,
   });
   const [selectedClient, setSelectedClient] = useState({
@@ -90,13 +90,15 @@ const OrderForm = () => {
     "12x",
   ];
   const metodoPgto = [
-    { cod: 1, tipo: "à vista"},
+    { cod: 1, tipo: "à vista" },
     { cod: 2, tipo: "crediário" },
     { cod: 3, tipo: "cartão de crédito" },
   ];
   const setarDados = () => {
+
+    // TODO ELE SÓ ESTÁ PEGANDO O NOME DOS ITENS E NÃO O OBJETO COMPLETO , TEM QUE DAR UM FIND ANTES  PARA PEGAR TODOS OS VALORES , ANTES DE SALVAR NO BANCO
     const data = {
-      produto: { nome: selectedProduct.produto, valor: selectedProduct.valor },
+      produto: { nome: selectedProduct.nome, valor: selectedProduct.valor },
       cliente: { nome: selectedClient.nome, endereco: selectedClient.endereco },
       data: selectedDate,
       parcelas: selectedParcelas,
@@ -105,9 +107,17 @@ const OrderForm = () => {
     console.log(data);
     Alert.alert(
       "Pedido cadastrado com sucesso!",
-      `nome: ${data.cliente.nome} - produto: ${data.produto.nome}  - parcelas: ${data.parcelas} - método de pagamento: ${data.metodoPagamento}`
+      `   - nome: ${data.cliente.nome}
+          - endereço: ${data.cliente.endereco}
+          - produto: ${data.produto.nome}
+          - valor: ${data.produto.valor}
+          - parcelas: ${data.parcelas}
+          - método de pagamento: ${data.metodoPagamento}
+     `
     );
   };
+  console.log("client", selectedClient);
+  // TODO POR ALGUM MOTIVO ELE SÓ ESTA PEGANDO O VALOR DO NOME DO CLIENTE E NÃO O ENDEREÇO
   return (
     <Container>
       <FormContainer>
@@ -115,82 +125,97 @@ const OrderForm = () => {
 
         <Title>Cliente:</Title>
         <Picker
-          selectedValue={selectedClient}
-          onValueChange={(cliente) => {
-            setSelectedClient(cliente);
-          }}
-        >
-          {clientes.map((cliente) => {
-            return (
-              <Picker.Item
-                key={cliente.nome}
-                label={`cliente: ${cliente.nome} - endereço: ${cliente.endereco}`}
-                value={cliente}
-              />
-            );
-          })}
-        </Picker>
-
-        <Title>Produto:</Title>
-        <Picker
-          selectedValue={selectedProduct}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedProduct(itemValue)
-          }
-        >
-          {produtos.map((produto) => {
-            return (
-              <Picker.Item
-                key={produto.produto}
-                label={`produto: ${produto.produto} - valor: ${produto.valor}`}
-                value={produto.produto}
-              />
-            );
-          })}
-        </Picker>
-
-        <Title>Método de pagamento:</Title>
-        <Picker
-          selectedValue={metodoPagamento}
-          onValueChange={(itemValue, itemIndex) =>
-            setMetodoPagamento(itemValue)
-          }
-        >
-          <Picker.Item
-            key={metodoPagamento}
-            label={"à vista"}
-            value={"avista"}
-          />
-          <Picker.Item
-            key={metodoPagamento}
-            label={"crediário"}
-            value={"crediario"}
-          />
-          <Picker.Item
-            key={metodoPagamento}
-            label={"cartão de crédito"}
-            value={"cartao"}
-          />
-        </Picker>
-        {metodoPagamento === "crediário" ? (
-          <>
-            <Title>parcelas:</Title>
-            <Picker
-              selectedValue={selectedParcelas}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedParcelas(itemValue)
+              selectedValue={selectedClient}
+              onValueChange={(itemValue) => setSelectedClient(itemValue)
               }
             >
-              {parcelas.map((parcela) => {
+              {clientes.map((cliente) => {
                 return (
-                  <Picker.Item key={parcela} label={parcela} value={parcela} />
+                  <Picker.Item
+                    key={cliente.nome}
+                    label={
+                            `- Nome: ${cliente.nome} - Endereço: ${cliente.endereco}`
+                        }
+                    value={cliente.nome}
+                  />
                 );
               })}
             </Picker>
+
+        {selectedClient.nome !== "" ? (
+          <>
+            <Title>Produto:</Title>
+            <Picker
+              selectedValue={selectedProduct}
+              onValueChange={(itemValue) =>
+                setSelectedProduct(itemValue)
+              }
+            >
+              {produtos.map((produto) => {
+                return (
+                  <Picker.Item
+                    key={produto.produto}
+                    label={`produto: ${produto.produto} - valor: ${produto.valor}`}
+                    value={produto.produto}
+                  />
+                );
+              })}
+            </Picker>
+
+            {selectedProduct.nome !== "" ? (
+              <>
+                <Title>Método de pagamento:</Title>
+                <Picker
+                  selectedValue={metodoPagamento}
+                  onValueChange={(itemValue) => setMetodoPagamento(itemValue)}
+                >
+                  <Picker.Item
+                    key={metodoPagamento}
+                    label={"à vista"}
+                    value={"avista"}
+                  />
+                  <Picker.Item
+                    key={metodoPagamento}
+                    label={"crediário"}
+                    value={"crediario"}
+                  />
+                  <Picker.Item
+                    key={metodoPagamento}
+                    label={"cartão de crédito"}
+                    value={"cartao"}
+                  />
+                </Picker>
+              </>
+            ) : (
+              <></>
+            )}
+
+            {metodoPagamento === "crediario" ? (
+              <>
+                <Title>parcelas:</Title>
+                <Picker
+                  selectedValue={selectedParcelas}
+                  onValueChange={(itemValue) => setSelectedParcelas(itemValue)}
+                >
+                  {parcelas.map((parcela) => {
+                    return (
+                      <Picker.Item
+                        key={parcela}
+                        label={parcela}
+                        value={parcela}
+                      />
+                    );
+                  })}
+                </Picker>
+              </>
+            ) : (
+              <></>
+            )}
           </>
         ) : (
           <></>
         )}
+
         <Button title="cadastrar" onPress={() => setarDados()} />
       </FormContainer>
     </Container>
