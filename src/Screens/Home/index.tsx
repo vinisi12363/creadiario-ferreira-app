@@ -1,7 +1,5 @@
 import { Container, Title, SubTitle , Touchable, TouchableText} from "./layout";
 import { Header } from "../../components/Header/Header";
-import { Text } from "react-native";
-import {View} from 'react-native';
 
 
 export  const Home = ({navigation})=>{
@@ -33,7 +31,7 @@ export  const Home = ({navigation})=>{
                 <TouchableText>Lançar Ficha</TouchableText>
             </Touchable>
         </Container>
-    
+
     </>
     
     );
