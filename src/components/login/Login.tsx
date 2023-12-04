@@ -1,32 +1,34 @@
 import { Alert } from 'react-native';
 import * as Style from './Layout';
 import { useState, useEffect } from 'react';
-import { getUser } from "../../Services/User-service";
-
+import { getUserByCpf } from "../../Services/User-service";
+import { useUserContext } from "../../Context/UserContext";
 
 export const Login = ({navigation}:any)=>{
     const [users, setUsers] = useState<any>([]); 
     const [userCpf, setUserCpf] = useState<string>("");
-    const CPF = '12345678900';
-    console.log(users);
-   
-    useEffect(()=>{
-       const result =  getUser().then((response)=>{
-            setUsers(response);
-        })
-     console.log('result',result);  
-    },[])
+    const {fetchUser} = useUserContext();
 
 
     const callHomeScreen = () => {
-        if(userCpf.length === 11 && userCpf === CPF){
-            navigation.navigate("Home");
-        }
-        else if(userCpf.length !== 11 || userCpf !== CPF){
-            Alert.alert("CPF inválido ou não cadastrado");
-            setUserCpf("");
+        navigation.navigate("Home");
+    }
+   
+    const verifyCpf = async () =>{
+       
+        if(userCpf.length === 11){
+           
+                const result  = await getUserByCpf("01572029501")
+                console.log("result", result)
+                if(result !== null){
+                    Alert.alert("Bem vindo ao sistema", "Login realizado com sucesso");
+                    fetchUser(result);
+                    callHomeScreen();
+                }
+
         }
     }
+  
     
     return(
             <>
@@ -39,7 +41,7 @@ export const Login = ({navigation}:any)=>{
                             value = {userCpf}
                             onChange={(e)=>{setUserCpf(e.nativeEvent.text)}}
                         ></Style.LoginInput>
-                            <Style.TouchableLogin onPress={()=>{callHomeScreen()}}>
+                            <Style.TouchableLogin onPress={()=>{verifyCpf()}}>
                                 <Style.LoginText>Entrar</Style.LoginText>
                                 
                             </Style.TouchableLogin>
