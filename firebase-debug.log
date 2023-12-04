@@ -1,0 +1,21 @@
+[debug] [2023-12-03T21:22:07.438Z] ----------------------------------------------------------------------
+[debug] [2023-12-03T21:22:07.441Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2023-12-03T21:22:07.441Z] CLI Version:   12.9.1
+[debug] [2023-12-03T21:22:07.441Z] Platform:      win32
+[debug] [2023-12-03T21:22:07.441Z] Node Version:  v20.9.0
+[debug] [2023-12-03T21:22:07.442Z] Time:          Sun Dec 03 2023 18:22:07 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2023-12-03T21:22:07.442Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-12-03T21:22:07.450Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-12-03T21:22:07.450Z] > authorizing via signed-in user (viniciuspv.si@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\vini_\Documents\DEV\PROJETOS\PROJETOS E FREELANCERS\MOBILE\creadiario-ferreira-app
+

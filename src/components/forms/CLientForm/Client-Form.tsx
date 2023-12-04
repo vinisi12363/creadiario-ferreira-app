@@ -11,14 +11,18 @@ const CadastroClientForm: React.FC<CadastroClientFormProps> = () => {
   const [endereco, setEndereco] = useState<string>("");
   const [cpf, setCpf] = useState<string>("");
   const [telefone, setTelefone] = useState<string>("");
-
+  const  [data , setData] = useState({});
   const handleCadastro = () => {
-    // Aqui você pode adicionar lógica para processar os dados do formulário
-    console.log("Nome:", nome);
-    console.log("endereco:", endereco);
-    console.log("cpf:", cpf);
 
-    // Limpar os campos após o envio
+    
+    const newDate = {
+      nome:nome,
+      endereco:endereco,
+      cpf:cpf,
+      telefone:telefone,
+    }
+    setData(newDate);
+    
     setNome("");
     setEndereco("");
     setCpf("");
@@ -61,7 +65,8 @@ const CadastroClientForm: React.FC<CadastroClientFormProps> = () => {
           keyboardType="numeric"
         />
 
-        <Button title="Cadastrar" onPress={handleCadastro} />
+        <Button title="Cadastrar" onPress={()=>{handleCadastro()
+        }} />
       </FormContainer>
       
     </Container>

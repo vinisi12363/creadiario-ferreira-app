@@ -7,9 +7,9 @@ const barHeight = StatusBar.currentHeight;
 export const HeaderContainer = styled.View`
     margin-top: ${barHeight}px;
     z-index:99
-    background-color: blue;
+    background-color: #282828;
     width: 100%;
-    height: 15%;
+    height: 10%;
     justify-content: center;
 `
 
@@ -17,7 +17,7 @@ export const HeaderTitle = styled.Text`
     font-size: 35px;
     font-weight: bold;
     color: white;
-    margin-bottom: 10%;
+    margin-bottom: 1%;
 `
 
 
