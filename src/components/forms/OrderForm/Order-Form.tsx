@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import {
   Container,
-  TextInput,
   Title,
   FormContainer,
   FormTitle,
   Button,
-  PickerContainer,
 } from "./OrderFormStyle";
 import { Picker } from "@react-native-picker/picker";
 import { Alert } from "react-native";
@@ -15,57 +13,19 @@ import { useClientContext } from "../../../Context/ClientContext";
 const OrderForm = () => {
   const {client} = useClientContext();
   console.log("Context client", client);
-  const [selectedProduct, setSelectedProduct] = useState({
-    nome: "",
-    valor: 0,
-  });
-  const [selectedClient, setSelectedClient] = useState({
-    nome: "",
-    endereco: "",
-  });
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [valueOfProduct, setValueOfProduct] = useState<number>(0);
+  const [selectedClient, setSelectedClient] = useState<string>("");  
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedParcelas, setSelectedParcelas] = useState<string>("");
   const [metodoPagamento, setMetodoPagamento] = useState<string>("");
-  const [newData, setNewData] = useState({
+  
+  const [newOrderData, setNewOrderData] = useState({
     prod: [{ produto: "", valor: 0 }],
     nomeCliente: "",
     Data: "",
   });
 
-  const clientes = [
-    {
-      nome: "João",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "Maria",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "José",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "Pedro",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "Antônio",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "Francisco",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "Carlos",
-      endereco: "rua dos bobos",
-    },
-    {
-      nome: "Paulo",
-      endereco: "rua dos bobos",
-    },
-  ];
   const produtos = [
     { produto: "panela de pressão", valor: 100 },
     { produto: "sofá", valor: 110 },
@@ -100,9 +60,11 @@ const OrderForm = () => {
   const setarDados = () => {
 
     // TODO ELE SÓ ESTÁ PEGANDO O NOME DOS ITENS E NÃO O OBJETO COMPLETO , TEM QUE DAR UM FIND ANTES  PARA PEGAR TODOS OS VALORES , ANTES DE SALVAR NO BANCO
+
+   
     const data = {
-      produto: { nome: selectedProduct.nome, valor: selectedProduct.valor },
-      cliente: { nome: selectedClient.nome, endereco: selectedClient.endereco },
+      produto: { nome: selectedProduct, valor: valueOfProduct },
+      cliente: selectedClient,
       data: selectedDate,
       parcelas: selectedParcelas,
       metodoPagamento: metodoPagamento,
@@ -110,8 +72,7 @@ const OrderForm = () => {
     console.log(data);
     Alert.alert(
       "Pedido cadastrado com sucesso!",
-      `   - nome: ${data.cliente.nome}
-          - endereço: ${data.cliente.endereco}
+      `   - nome: ${data.cliente}
           - produto: ${data.produto.nome}
           - valor: ${data.produto.valor}
           - parcelas: ${data.parcelas}
@@ -119,8 +80,7 @@ const OrderForm = () => {
      `
     );
   };
-  console.log("client", selectedClient);
-  // TODO POR ALGUM MOTIVO ELE SÓ ESTA PEGANDO O VALOR DO NOME DO CLIENTE E NÃO O ENDEREÇO
+  
   return (
     <Container>
       <FormContainer>
@@ -145,7 +105,7 @@ const OrderForm = () => {
               })}
             </Picker>
 
-        {selectedClient.nome !== "" ? (
+        {selectedClient !== "" ? (
           <>
             <Title>Produto:</Title>
             <Picker
@@ -165,7 +125,7 @@ const OrderForm = () => {
               })}
             </Picker>
 
-            {selectedProduct.nome !== "" ? (
+            {selectedProduct !== "" ? (
               <>
                 <Title>Método de pagamento:</Title>
                 <Picker
