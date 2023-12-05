@@ -8,13 +8,14 @@ import { Produto } from './src/Screens/Produtos';
 import { Order } from './src/Screens/Pedidos';
 import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import { Container } from './layout';
 import { UserProvider } from './src/Context/UserContext';
+import { ClientProvider } from './src/Context/ClientContext';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    <ClientProvider>
     <UserProvider>
     <NavigationContainer>
       <Stack.Navigator >
@@ -28,5 +29,6 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
     </UserProvider>
+    </ClientProvider>
   );
 }

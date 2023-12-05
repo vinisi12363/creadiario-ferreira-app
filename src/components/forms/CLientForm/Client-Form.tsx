@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Button, StyleSheet } from "react-native";
+import { Alert, Button, StyleSheet } from "react-native";
 import { Container, TextInput, Title, FormContainer, FormTitle } from "./ClientFormStyle";
+import { postClient } from "../../../Repository/Client-repository";
 
 interface CadastroClientFormProps {
   // Adicione propriedades adicionais conforme necessário
@@ -12,22 +13,34 @@ const CadastroClientForm: React.FC<CadastroClientFormProps> = () => {
   const [cpf, setCpf] = useState<string>("");
   const [telefone, setTelefone] = useState<string>("");
   const  [data , setData] = useState({});
-  const handleCadastro = () => {
+  
+  const handleCadastro = async () => {
 
-    
-    const newDate = {
+     const newDate = {
       nome:nome,
       endereco:endereco,
       cpf:cpf,
       telefone:telefone,
     }
     setData(newDate);
+    try {
+      const result = await postClient(newDate);
+      console.log("result", result);
+    } catch (error) {
+      console.log("error", error);
+      Alert.alert("Erro ao cadastrar cliente", "Tente novamente mais tarde");
+    }
     
     setNome("");
     setEndereco("");
     setCpf("");
     setTelefone("");
+    registerClient();
   };
+
+  const registerClient = async () => {
+   
+  }
   //TODO = adicionar  validações de campos vazios, no nome e telefone 
   //TODO = adicionar validação de cpf
   //TODO = adicionar validação de telefone

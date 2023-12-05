@@ -10,8 +10,11 @@ import {
 } from "./OrderFormStyle";
 import { Picker } from "@react-native-picker/picker";
 import { Alert } from "react-native";
+import { useClientContext } from "../../../Context/ClientContext";
 
 const OrderForm = () => {
+  const {client} = useClientContext();
+  console.log("Context client", client);
   const [selectedProduct, setSelectedProduct] = useState({
     nome: "",
     valor: 0,
@@ -129,14 +132,14 @@ const OrderForm = () => {
               onValueChange={(itemValue) => setSelectedClient(itemValue)
               }
             >
-              {clientes.map((cliente) => {
+              {client._j.map((c:any) => {
                 return (
                   <Picker.Item
-                    key={cliente.nome}
+                    key={c.nome}
                     label={
-                            `- Nome: ${cliente.nome} - Endereço: ${cliente.endereco}`
+                            `- Nome: ${c.nome} - Endereço: ${c.endereco}`
                         }
-                    value={cliente.nome}
+                    value={c.nome}
                   />
                 );
               })}
