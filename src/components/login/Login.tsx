@@ -18,7 +18,7 @@ export const Login = ({navigation}:any)=>{
        
         if(userCpf.length === 11){
            
-                const result  = await getUserByCpf("01572029501")
+                const result  = await getUserByCpf(userCpf)
                 console.log("result", result)
                 if(result !== null){
                     Alert.alert("Bem vindo ao sistema", "Login realizado com sucesso");

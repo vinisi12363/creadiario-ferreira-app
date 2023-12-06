@@ -14,11 +14,11 @@ interface productContextType {
 const productContext = createContext<productContextType | undefined>(undefined);
 
 // Criar um componente de provedor para envolver a parte do seu aplicativo que precisa do contexto
-interface productProviderProps {
+interface ProductProviderProps {
   children: ReactNode;
 }
 
-const productProvider: React.FC<productProviderProps> = ({ children }) => {
+const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
   const [product, setproduct] = useState<any | null>(null);
 
   const fetchproduct = (productData: any) => {
@@ -43,4 +43,4 @@ const useProductContext = (): productContextType => {
   return context;
 };
 
-export { productProvider, useProductContext };
+export { ProductProvider, useProductContext };

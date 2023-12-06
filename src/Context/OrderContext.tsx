@@ -14,11 +14,11 @@ interface orderContextType {
 const orderContext = createContext<orderContextType | undefined>(undefined);
 
 // Criar um componente de provedor para envolver a parte do seu aplicativo que precisa do contexto
-interface orderProviderProps {
+interface OrderProviderProps {
   children: ReactNode;
 }
 
-const orderProvider: React.FC<orderProviderProps> = ({ children }) => {
+const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
   const [order, setorder] = useState<any | null>(null);
 
   const fetchorder = (orderData: any) => {
@@ -43,4 +43,4 @@ const useOrderContext = (): orderContextType => {
   return context;
 };
 
-export { orderProvider, useOrderContext };
+export { OrderProvider, useOrderContext };

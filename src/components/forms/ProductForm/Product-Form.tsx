@@ -8,22 +8,23 @@ interface CadastroFormProps {
 
 const CadastroProdForm: React.FC<CadastroFormProps> = () => {
   const [nome, setNome] = useState<string>("");
-  const [valor, setValor] = useState<number>();
-  const [quant, setQuant] = useState<number>();
+  const [valor, setValor] = useState<number>(0);
+  const [quant, setQuant] = useState<number>(0);
   const [quantParcelas, setQuantParcelas] = useState<number>();
 
   const handleCadastro = () => {
-    // Aqui você pode adicionar lógica para processar os dados do formulário
+   
     console.log("Nome:", nome);
     console.log("valor:", valor);
     console.log("quant:", quant);
 
-    // Limpar os campos após o envio
+    
     setNome("");
     setValor(0);
     setQuant(0);
     setQuantParcelas(0);
   };
+  
   //TODO = adicionar  validações de campos vazios, no nome e quantParcelas 
   //TODO = adicionar validação de quant
   //TODO = adicionar validação de quantParcelas
