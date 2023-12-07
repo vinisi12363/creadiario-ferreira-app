@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import {Alert } from 'react-native';
 import {  StyleSheet } from "react-native";
 import { Container, TextInput, Title, FormContainer, FormTitle, Button } from "./ProdFormStyle";
-
+import { postProduct } from "../../../Services/Product-service";
 interface CadastroFormProps {
   // Adicione propriedades adicionais conforme necessário
 }
@@ -10,19 +11,37 @@ const CadastroProdForm: React.FC<CadastroFormProps> = () => {
   const [nome, setNome] = useState<string>("");
   const [valor, setValor] = useState<number>(0);
   const [quant, setQuant] = useState<number>(0);
+  const [disabled , setDisabled ] = useState (false);
   const [quantParcelas, setQuantParcelas] = useState<number>();
 
   const handleCadastro = () => {
-   
+    setDisabled(true);
+    if(!valor || !nome || !quant){
+      setDisabled(false);
+      Alert.alert(
+        "Erro", "todos os campos são obrigatórios!"
+      )
+      return;
+    }
     console.log("Nome:", nome);
     console.log("valor:", valor);
     console.log("quant:", quant);
 
+   
     
-    setNome("");
-    setValor(0);
-    setQuant(0);
-    setQuantParcelas(0);
+    try {
+      const promise = postProduct({nome, quant, valor}); 
+      setDisabled(false); 
+      console.log("PROMISE",promise);
+      setNome("");
+      setValor(0);
+      setQuant(0);
+      setQuantParcelas(0);
+    } catch (error) {
+      Alert.alert("Erro" , "houve um erro ao cadastrar o seu produto, tente novamente mais tarde");
+      setDisabled(false);
+    }
+
   };
   
   //TODO = adicionar  validações de campos vazios, no nome e quantParcelas 
@@ -40,21 +59,17 @@ const CadastroProdForm: React.FC<CadastroFormProps> = () => {
           value={nome}
           onChangeText={(Title) => setNome(Title)}
         />
-
-        <Title>Preço:</Title>
+        
+        <Title>Valor do produto:</Title>
         <TextInput
-          inputMode="numeric"
-          value={valor ? valor.toString() : ''}
-          keyboardType="decimal-pad"
+        
+          value={valor? valor.toString(): ''}
           onChangeText={(Title) => setValor(Number(Title))}
+          keyboardType="numeric"
         />
-        <Title>quantParcelas:</Title>
-        <TextInput  
-          value={quantParcelas? quantParcelas.toString(): ''}
-          onChangeText={(Title) => setQuantParcelas(Number(Title))}
-          keyboardType="phone-pad"
-        />
-        <Title>quant:</Title>
+
+        
+        <Title>Quantidade no Estoque:</Title>
         <TextInput
         
           value={quant? quant.toString(): ''}
@@ -62,28 +77,11 @@ const CadastroProdForm: React.FC<CadastroFormProps> = () => {
           keyboardType="numeric"
         />
 
-        <Button title="cadastrar" onPress={handleCadastro} />
+        <Button disabled={disabled} title="cadastrar" onPress={handleCadastro} />
       </FormContainer>
       
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
 
 export default CadastroProdForm;

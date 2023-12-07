@@ -1,20 +1,22 @@
 import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { db } from "../Services/fireStore";
 
-const productsCollection = collection(db, "products");
+const productsCollection = collection(db, "produtos");
 
 export const postProduct = async (Product) => {
-  const { nome, valor, estoque } = Product;
+  const { nome, quant , valor } = Product;
+  console.log("nome", nome, "estoque",  quant , valor);
 
   try {
     const docRef = await addDoc(productsCollection, {
       nome: nome,
-      valor: valor,
-      estoque: estoque,
+      quant: quant,
+      valor: valor
     });
 
     console.log("Document written with ID: ", docRef.id);
-    return docRef.id;
+
+   return {prod_id: docRef.id};
   } catch (e) {
     console.error("Error adding document: ", e);
   }

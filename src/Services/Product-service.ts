@@ -2,10 +2,13 @@ import * as productRepo from '../Repository/Product-repository';
 import {Alert} from 'react-native';
 
 
-export const postproduct = async (product) => {
+export const postProduct = async (product) => {
     
     try {
-        return await productRepo.postProduct(product);
+        const { prod_id } =   await productRepo.postProduct(product);
+        if(prod_id)
+            Alert.alert("Sucesso" , " Produto cadastrado com sucesso! ");
+        return prod_id;
     } catch (error) {
         Alert.alert("Erro ao adicionar produto", "Verifique os dados e tente novamente");
         throw error;

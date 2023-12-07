@@ -7,7 +7,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 // Definir o tipo do contexto
 interface productContextType {
   product: any | null;
-  fetchproduct: (productData) => void;
+  fetchProduct: (productData) => void;
 }
 
 // Criar o contexto
@@ -21,12 +21,12 @@ interface ProductProviderProps {
 const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
   const [product, setproduct] = useState<any | null>(null);
 
-  const fetchproduct = (productData: any) => {
+  const fetchProduct = (productData: any) => {
     setproduct(productData);
   };
 
   return (
-    <productContext.Provider value={{ product, fetchproduct, }}>
+    <productContext.Provider value={{ product, fetchProduct, }}>
       {children}
     </productContext.Provider>
   );

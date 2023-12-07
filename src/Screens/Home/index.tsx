@@ -1,22 +1,30 @@
 import { Container, Title, SubTitle , Touchable, TouchableText} from "./layout";
 import { Header } from "../../components/Header/Header";
 import { useClientContext } from "../../Context/ClientContext";
+import { useProductContext } from "../../Context/ProductContext";
 import { getclients } from "../../Services/Client-service";
+import { getproducts } from "../../Services/Product-service";
 import { useEffect } from "react";
+import {Alert} from 'react-native';
 
 
 export  const Home = ({navigation})=>{
     
     const {client,fetchclient} = useClientContext();
+    const {fetchProduct } = useProductContext();
     useEffect(()=>{
         try {
             const result = getclients();
+            const loadProducts = getproducts();
+            if(loadProducts){
+                fetchProduct(loadProducts);
+            }
             if(result){
                 console.log("CLIENTS",result);
                 fetchclient(result);
             }
         } catch (error) {
-            
+            Alert.alert("Erro" , "Houve um erro ao carregar os clientes, ou produtos!");
         }
 
     },[]);
