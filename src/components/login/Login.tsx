@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import * as Style from './Layout';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getUserByCpf } from "../../Services/User-service";
 import { useUserContext } from "../../Context/UserContext";
 
