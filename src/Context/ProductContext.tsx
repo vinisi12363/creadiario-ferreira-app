@@ -4,16 +4,14 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 
 
-// Definir o tipo do contexto
 interface productContextType {
   product: any | null;
   fetchProduct: (productData) => void;
 }
 
-// Criar o contexto
+
 const productContext = createContext<productContextType | undefined>(undefined);
 
-// Criar um componente de provedor para envolver a parte do seu aplicativo que precisa do contexto
 interface ProductProviderProps {
   children: ReactNode;
 }
@@ -32,7 +30,7 @@ const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
   );
 };
 
-// Criar um hook personalizado para consumir o contexto
+
 const useProductContext = (): productContextType => {
   const context = useContext(productContext);
 

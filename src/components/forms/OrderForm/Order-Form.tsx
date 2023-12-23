@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { Alert } from "react-native";
+import { SafeAreaView } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useClientContext } from "../../../Context/ClientContext";
 import { useProductContext } from "../../../Context/ProductContext";
 
@@ -11,6 +13,7 @@ import {
   FormTitle,
   Button,
   FormArea,
+  DateButton,
 } from "./OrderFormStyle";
 
 const OrderForm = () => {
@@ -23,28 +26,33 @@ const OrderForm = () => {
     docId: "",
   });
   const [selectedClient, setSelectedClient] = useState({
-    docId:"",
+    docId: "",
     nome: "",
-    endereco: "", 
-    telefone:""
+    endereco: "",
+    telefone: "",
   });
   const [valueOfProduct, setValueOfProduct] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedParcelas, setSelectedParcelas] = useState<string>("");
   const [metodoPagamento, setMetodoPagamento] = useState<string>("");
+  const [disableSalvar, setDisableSalvar] = useState<boolean>(true);
 
   const parcelas = [
-    "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x", "11x", "12x"
-  ];
-
-  const metodoPgto = [
-    { cod: 1, tipo: "à vista" },
-    { cod: 2, tipo: "crediário" },
-    { cod: 3, tipo: "cartão de crédito" },
+    "2x",
+    "3x",
+    "4x",
+    "5x",
+    "6x",
+    "7x",
+    "8x",
+    "9x",
+    "10x",
+    "11x",
+    "12x",
   ];
 
   const setarDados = () => {
-    console.log("metodo de pgto ", metodoPagamento)
+    console.log("metodo de pgto ", metodoPagamento);
     const data = {
       cliente: {
         id: selectedClient.docId,
@@ -69,23 +77,62 @@ const OrderForm = () => {
       - Produto: ${data.produto.nome}
       - Valor: R$${data.produto.valor},00
       - Método de pagamento: ${data.metodoPagamento}
-      - Parcelas: ${data.parcelas}`
+      - Parcelas: ${data.parcelas}
+      - Data: ${date.toLocaleString()}
+      
+      `
     );
+  };
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+  console.log("date", date);
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
   };
 
 
- console.log("selectedClient", selectedClient);
   return (
     <Container>
       <FormContainer>
         <FormTitle>Lançamento de Vendas</FormTitle>
+
+        <SafeAreaView>
+          <DateButton onPress={showDatepicker}>
+            <Title>Data da venda</Title>
+          </DateButton>
+
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={"date"}
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
+        </SafeAreaView>
         <FormArea>
           <Title>Cliente:</Title>
           <Picker
             selectedValue={selectedClient}
-            onValueChange={(itemValue) =>  setSelectedClient(itemValue)}
+            onValueChange={(itemValue) => setSelectedClient(itemValue)}
           >
-            <Picker.Item label="Selecione o cliente" enabled={false}></Picker.Item>
+            <Picker.Item
+              label="Selecione o cliente"
+              enabled={false}
+            ></Picker.Item>
             {client._j.map((c) => (
               <Picker.Item
                 key={c.docId}
@@ -101,8 +148,11 @@ const OrderForm = () => {
               <Picker
                 selectedValue={selectedProduct}
                 onValueChange={(itemValue) => setSelectedProduct(itemValue)}
-              > 
-                 <Picker.Item label="Selecione o produto" enabled={false}></Picker.Item>
+              >
+                <Picker.Item
+                  label="Selecione o produto"
+                  enabled={false}
+                ></Picker.Item>
                 {product._j.map((p) => (
                   <Picker.Item
                     key={p.docId}
@@ -118,8 +168,11 @@ const OrderForm = () => {
                   <Picker
                     selectedValue={metodoPagamento}
                     onValueChange={(itemValue) => setMetodoPagamento(itemValue)}
-                  > 
-                    <Picker.Item label="Selecione a forma de pagamento" enabled={false}></Picker.Item>
+                  >
+                    <Picker.Item
+                      label="Selecione a forma de pagamento"
+                      enabled={false}
+                    ></Picker.Item>
                     <Picker.Item label="à vista" value="avista" />
                     <Picker.Item label="crediário" value="crediario" />
                     <Picker.Item label="cartão de crédito" value="cartao" />
@@ -130,13 +183,23 @@ const OrderForm = () => {
               {metodoPagamento === "crediario" && (
                 <>
                   <Title>Parcelas:</Title>
-                  <Picker.Item label="Selecione a qaunt. parcelas" enabled={false}></Picker.Item>
+
                   <Picker
                     selectedValue={selectedParcelas}
-                    onValueChange={(itemValue) => setSelectedParcelas(itemValue)}
+                    onValueChange={(itemValue) =>
+                      setSelectedParcelas(itemValue)
+                    }
                   >
+                    <Picker.Item
+                      label="Selecione a quant. parcelas"
+                      enabled={false}
+                    ></Picker.Item>
                     {parcelas.map((parcela) => (
-                      <Picker.Item key={parcela} label={parcela} value={parcela} />
+                      <Picker.Item
+                        key={parcela}
+                        label={parcela}
+                        value={parcela}
+                      />
                     ))}
                   </Picker>
                 </>
@@ -144,7 +207,10 @@ const OrderForm = () => {
             </>
           )}
         </FormArea>
-        <Button title="Cadastrar" onPress={() => setarDados()} />
+
+        <Button onPress={() => setarDados()}>
+          <Title>Salvar</Title>
+        </Button>
       </FormContainer>
     </Container>
   );
