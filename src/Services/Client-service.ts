@@ -17,7 +17,6 @@ export const postclient = async (client) => {
 export const getclients = async () => {
     try {
         const client = await clientRepo.getclients();
-        console.log("QUERY ON client SERVICE", client)
         return client;
     } catch (error) {
         throw error;

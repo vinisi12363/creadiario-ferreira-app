@@ -16,11 +16,11 @@ export  const Home = ({navigation})=>{
         try {
             const result = getclients();
             const loadProducts = getproducts();
+            Alert.alert("CredApp" , "Seja bem vindo ao Crediário Ferreira!");
             if(loadProducts){
                 fetchProduct(loadProducts);
             }
             if(result){
-                console.log("CLIENTS",result);
                 fetchclient(result);
             }
         } catch (error) {

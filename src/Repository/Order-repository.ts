@@ -4,16 +4,30 @@ import { db } from "../Services/fireStore";
 
 const OrdersCollection = collection(db, "Orders");
 
-export const postOrder = async (order) => {
-    const {nome , cpf, endereco, telefone} = order;
- 
+export type Order = {
+    cliente: { id:string, nome:string, endereco:string },
+    produto: { id:string , nome:string, valor:number },
+    valueOfOrder:number,
+    data:string,
+    parcelas:string,
+    metodoPagamento:string,
 
+}
+
+export const postOrder= async (order : Order) => {
     try {
-    const docRef = await addDoc(OrdersCollection, {
-        nome : nome,
-        cpf: cpf,
-        endereco: endereco,
-        telefone: telefone
+        const docRef = await addDoc(OrdersCollection, {
+            nomeCliente : order.cliente.nome,
+            enderecoCliente: order.cliente.endereco,
+            idCliente: order.cliente.id,
+            nomeProduto: order.produto.nome,
+            valorProduto: order.produto.valor,
+            idProduto: order.produto.id,
+            valorTotal: order.valueOfOrder,
+            dataDaVenda: order.data,
+            parcelas: order.parcelas,
+            metodoPagamento: order.metodoPagamento,
+        
     });
 
     console.log("Document written with ID: ", docRef.id);
@@ -41,3 +55,25 @@ export const getOrders = async ()=>{
         })
         return data;
 } 
+
+export const getOrdersByOrderId = async (orderId:string)=>{
+    try {
+        const q = query(OrdersCollection, where("id", "==", orderId));
+        const result = await getDocs(q);
+        let data = [];
+        result.forEach((doc) => {
+            console.log(`Order id => ${doc.id}`);
+            const Orderdata = {
+                docId:doc.id,
+               
+            }
+            data.push(Orderdata);
+        })
+        return data;
+    }catch (error) {
+        console.log(error);
+        return null;
+
+    }
+
+}

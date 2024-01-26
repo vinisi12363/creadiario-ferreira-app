@@ -24,11 +24,14 @@ export const FormContainer = styled.View`
     background-color: #13747d;
 `
 export const FormArea = styled.View`
-    flex:0.9;
+    flex:1;
     min-width: 100%;
+    min-height: 75%;
     border-radius:10px;
     Align-items: center;
     justify-content: start;
+    position:relative;
+    bottom:10%;
     padding: 3px;
     background-color: #d7d8c5;
 `
@@ -44,7 +47,7 @@ export const Title = styled.Text`
     font-size: 20px;
     font-weight: bold;
     color: #000;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 `
 export  const FormTitle = styled.Text`
     font-size: 40px;
@@ -54,10 +57,10 @@ export  const FormTitle = styled.Text`
     color: #fff;
     margin-bottom: 20px;
 `
-//TODO tem que pesquisar sobre o Datepicker  pra pegar a data da ficha ... /.....
+
 export const Button = styled.TouchableOpacity`
     
-    background-color: lightgrey;
+    background-color: lightblue;
     border-radius: 10px;
    
     border: 1px solid #ccc;
@@ -67,8 +70,23 @@ export const Button = styled.TouchableOpacity`
     max-width:45%;
     position:relative;
     left:30%;
-    top:5%;
+    bottom:8%;
 
+`
+
+export const PlusBtn = styled.TouchableOpacity`
+        background-color: lightblue;
+        border-radius: 5px;
+        border: 3px solid #ccc;
+        align-items: center;
+        justify-content: center;
+        text-align:center;
+        width:12%;
+        min-height:10px;
+        position:fixed;
+        left:85%;
+        bottom:10%;
+        z-index:1;
 `
 export const DateButton = styled.TouchableOpacity`
     
@@ -82,7 +100,7 @@ export const DateButton = styled.TouchableOpacity`
     max-width:50%;
     position:fixed;
     left:50%;
-    bottom:15%;
+    bottom:95%;
     z-index:1;
 
 `

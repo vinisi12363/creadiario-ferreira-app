@@ -17,14 +17,19 @@ export const Login = ({navigation}:any)=>{
     const verifyCpf = async () =>{
        
         if(userCpf.length === 11){
-           
-                const result  = await getUserByCpf(userCpf)
-                console.log("result", result)
-                if(result !== null){
-                    Alert.alert("Bem vindo ao sistema", "Login realizado com sucesso");
-                    fetchUser(result);
-                    callHomeScreen();
+                try {
+                    Alert.alert("CredApp", "Carregando ...");
+                    const result  = await getUserByCpf(userCpf)
+                    console.log("result", result)
+                    if(result !== null){
+                        Alert.alert("Bem vindo ao sistema", "Login realizado com sucesso");
+                        fetchUser(result);
+                        callHomeScreen();
+                    }
+                } catch (error) {
+                    Alert.alert("Erro", "Usuário não encontrado ou sistema indisponível.");
                 }
+          
 
         }
     }

@@ -1,4 +1,3 @@
-// Exemplo de arquivo AppContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 
@@ -7,6 +6,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface productContextType {
   product: any | null;
   fetchProduct: (productData) => void;
+  selectedProduct: any | null;
+  setSelectedProduct: (productData) => void;
 }
 
 
@@ -17,14 +18,20 @@ interface ProductProviderProps {
 }
 
 const ProductProvider: React.FC<ProductProviderProps> = ({ children }) => {
-  const [product, setproduct] = useState<any | null>(null);
+  const [product, setProduct] = useState<any | null>(null);
+
+  const [selectedProduct, setSelectedProduct] = useState({
+    nome: "",
+    valor: "",
+    docId: "",
+  });
 
   const fetchProduct = (productData: any) => {
-    setproduct(productData);
+    setProduct(productData);
   };
 
   return (
-    <productContext.Provider value={{ product, fetchProduct, }}>
+    <productContext.Provider value={{ product, fetchProduct,  selectedProduct , setSelectedProduct }}>
       {children}
     </productContext.Provider>
   );

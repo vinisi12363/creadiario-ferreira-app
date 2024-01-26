@@ -2,7 +2,7 @@ import * as OrderRepo from '../Repository/Order-repository';
 import {Alert} from 'react-native';
 
 
-export const postOrder = async (Order) => {
+export const postOrder = async (Order:OrderRepo.Order) => {
     
     try {
         return await OrderRepo.postOrder(Order);
@@ -17,6 +17,14 @@ export const postOrder = async (Order) => {
 export const getOrders = async () => {
     try {
         return await OrderRepo.getOrders();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getOrdersByid= async (id) => {
+    try {
+        return await OrderRepo.getOrdersByOrderId(id);
     } catch (error) {
         throw error;
     }

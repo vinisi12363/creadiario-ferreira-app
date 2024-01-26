@@ -5,6 +5,12 @@ import { SafeAreaView } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useClientContext } from "../../../Context/ClientContext";
 import { useProductContext } from "../../../Context/ProductContext";
+import { ProductPicker } from "./ProductPicker";
+import * as orderService from "../../../Services/Order-service";
+import { Order } from "../../../Repository/Order-repository";
+
+
+
 
 import {
   Container,
@@ -14,28 +20,24 @@ import {
   Button,
   FormArea,
   DateButton,
+  PlusBtn
 } from "./OrderFormStyle";
 
 const OrderForm = () => {
   const { client } = useClientContext();
-  const { product } = useProductContext();
+  const { selectedProduct } = useProductContext();
 
-  const [selectedProduct, setSelectedProduct] = useState({
-    nome: "",
-    valor: "",
-    docId: "",
-  });
   const [selectedClient, setSelectedClient] = useState({
     docId: "",
     nome: "",
     endereco: "",
     telefone: "",
   });
-  const [valueOfProduct, setValueOfProduct] = useState<number>(0);
+
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedParcelas, setSelectedParcelas] = useState<string>("");
   const [metodoPagamento, setMetodoPagamento] = useState<string>("");
-  const [disableSalvar, setDisableSalvar] = useState<boolean>(true);
+  const [disableSalvar, setDisableSalvar] = useState<boolean>(false);
 
   const parcelas = [
     "2x",
@@ -51,9 +53,9 @@ const OrderForm = () => {
     "12x",
   ];
 
-  const setarDados = () => {
-    console.log("metodo de pgto ", metodoPagamento);
-    const data = {
+  const setarDados = async ()  => {
+   setDisableSalvar(true);
+    const data: Order = {
       cliente: {
         id: selectedClient.docId,
         nome: selectedClient.nome,
@@ -64,35 +66,38 @@ const OrderForm = () => {
         nome: selectedProduct.nome,
         valor: selectedProduct.valor,
       },
+      valueOfOrder: selectedProduct.valor,
       data: selectedDate,
       parcelas: selectedParcelas,
       metodoPagamento: metodoPagamento,
     };
 
-    console.log("data", data);
-
-    Alert.alert(
-      "Pedido cadastrado com sucesso!",
-      `- Cliente: ${selectedClient.nome}
-      - Produto: ${data.produto.nome}
-      - Valor: R$${data.produto.valor},00
-      - Método de pagamento: ${data.metodoPagamento}
-      - Parcelas: ${data.parcelas}
-      - Data: ${date.toLocaleString()}
-      
-      `
-    );
+    try {
+      console.log("DADOS", data);
+      Alert.alert("Venda cadastrada com sucesso!");
+      const result = await orderService.postOrder(data);
+      console.log("RESULTADO", result);
+      setDisableSalvar(false);
+    } catch (error) {
+      Alert.alert("Erro ao cadastrar venda!");
+      console.log("ERRO",error);
+    }
+  
+  
   };
+
+
+
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  console.log("date", date);
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
+    setSelectedDate(currentDate.toISOString().split("T")[0]); 
   };
-
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -145,24 +150,10 @@ const OrderForm = () => {
           {selectedClient.nome && (
             <>
               <Title>Produto:</Title>
-              <Picker
-                selectedValue={selectedProduct}
-                onValueChange={(itemValue) => setSelectedProduct(itemValue)}
-              >
-                <Picker.Item
-                  label="Selecione o produto"
-                  enabled={false}
-                ></Picker.Item>
-                {product._j.map((p) => (
-                  <Picker.Item
-                    key={p.docId}
-                    label={` ${p.nome} - R$ ${p.valor},00`}
-                    value={p}
-                  />
-                ))}
-              </Picker>
-
-              {selectedProduct.nome && (
+              <ProductPicker></ProductPicker>
+              
+              
+              {selectedProduct!== null && (
                 <>
                   <Title>Método de pagamento:</Title>
                   <Picker
@@ -208,8 +199,8 @@ const OrderForm = () => {
           )}
         </FormArea>
 
-        <Button onPress={() => setarDados()}>
-          <Title>Salvar</Title>
+        <Button disabled={disableSalvar} onPress={() => setarDados()}>
+                      <Title>Salvar</Title>
         </Button>
       </FormContainer>
     </Container>
