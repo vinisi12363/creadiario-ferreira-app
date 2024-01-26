@@ -2,8 +2,10 @@ import { Container, Title, SubTitle , Touchable, TouchableText} from "./layout";
 import { Header } from "../../components/Header/Header";
 import { useClientContext } from "../../Context/ClientContext";
 import { useProductContext } from "../../Context/ProductContext";
+import { useOrderContext } from "../../Context/OrderContext";
 import { getclients } from "../../Services/Client-service";
 import { getproducts } from "../../Services/Product-service";
+import { getOrders } from "../../Services/Order-service";
 import { useEffect } from "react";
 import {Alert} from 'react-native';
 
@@ -12,11 +14,17 @@ export  const Home = ({navigation})=>{
     
     const {client,fetchclient} = useClientContext();
     const {fetchProduct } = useProductContext();
+    const {fetchOrder  } = useOrderContext();
     useEffect(()=>{
+        Alert.alert("CredApp" , "Carregando ...");
         try {
             const result = getclients();
             const loadProducts = getproducts();
-            Alert.alert("CredApp" , "Seja bem vindo ao Crediário Ferreira!");
+            const loadOrders = getOrders();
+            if(loadOrders){
+                fetchOrder(loadOrders);
+            }
+
             if(loadProducts){
                 fetchProduct(loadProducts);
             }
@@ -38,6 +46,9 @@ export  const Home = ({navigation})=>{
     const callOrderScreen = () => {
         navigation.navigate("Order");
     }
+    const callOrderCardsScreen = () => {
+        navigation.navigate("OrderCards");
+    }
     return(
     <>
             <Header></Header>
@@ -56,8 +67,13 @@ export  const Home = ({navigation})=>{
             <Touchable key="Order" onPress={()=>{callOrderScreen()}}>
                 <TouchableText>Lançar Ficha</TouchableText>
             </Touchable>
-        </Container>
 
+            <Touchable key="OrderCards" onPress={()=>{callOrderCardsScreen()}}>
+                <TouchableText>Consultar Fichas</TouchableText>
+            </Touchable>
+            
+        </Container>
+      
     </>
     
     );

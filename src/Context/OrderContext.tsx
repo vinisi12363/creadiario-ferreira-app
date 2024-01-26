@@ -7,7 +7,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 // Definir o tipo do contexto
 interface orderContextType {
   order: any | null;
-  fetchorder: (orderData) => void;
+  fetchOrder: (orderData) => void;
 }
 
 // Criar o contexto
@@ -19,14 +19,14 @@ interface OrderProviderProps {
 }
 
 const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
-  const [order, setorder] = useState<any | null>(null);
+  const [order, setOrder] = useState<any | null>(null);
 
-  const fetchorder = (orderData: any) => {
-    setorder(orderData);
+  const fetchOrder = (orderData: any) => {
+    setOrder(orderData);
   };
 
   return (
-    <orderContext.Provider value={{ order, fetchorder, }}>
+    <orderContext.Provider value={{ order, fetchOrder, }}>
       {children}
     </orderContext.Provider>
   );

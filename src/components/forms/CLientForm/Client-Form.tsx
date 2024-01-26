@@ -25,7 +25,7 @@ const CadastroClientForm: React.FC<CadastroClientFormProps> = () => {
     setData(newDate);
     try {
       const result = await postClient(newDate);
-      console.log("result", result);
+   
     } catch (error) {
       console.log("error", error);
       Alert.alert("Erro ao cadastrar cliente", "Tente novamente mais tarde");

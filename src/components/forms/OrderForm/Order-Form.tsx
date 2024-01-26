@@ -7,8 +7,11 @@ import { useClientContext } from "../../../Context/ClientContext";
 import { useProductContext } from "../../../Context/ProductContext";
 import { ProductPicker } from "./ProductPicker";
 import * as orderService from "../../../Services/Order-service";
-import { Order } from "../../../Repository/Order-repository";
-
+import  *  as OrderRepo from "../../../Repository/Order-repository";
+import * as ClientRepo from "../../../Repository/Client-repository";
+import { Order , OrderPost } from "../../../Models/Order";
+import { Produto } from "../../../Models/Produto";
+import { Cliente } from "../../../Models/Cliente";
 
 
 
@@ -30,58 +33,64 @@ const OrderForm = () => {
   const [selectedClient, setSelectedClient] = useState({
     docId: "",
     nome: "",
+    cpf:"",
     endereco: "",
     telefone: "",
   });
 
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedParcelas, setSelectedParcelas] = useState<string>("");
+  const [selectedParcelas, setSelectedParcelas] = useState<number>(1);
   const [metodoPagamento, setMetodoPagamento] = useState<string>("");
   const [disableSalvar, setDisableSalvar] = useState<boolean>(false);
 
   const parcelas = [
-    "2x",
-    "3x",
-    "4x",
-    "5x",
-    "6x",
-    "7x",
-    "8x",
-    "9x",
-    "10x",
-    "11x",
-    "12x",
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
   ];
 
   const setarDados = async ()  => {
    setDisableSalvar(true);
-    const data: Order = {
-      cliente: {
-        id: selectedClient.docId,
-        nome: selectedClient.nome,
-        endereco: selectedClient.endereco,
-      },
-      produto: {
-        id: selectedProduct.docId,
-        nome: selectedProduct.nome,
-        valor: selectedProduct.valor,
-      },
-      valueOfOrder: selectedProduct.valor,
-      data: selectedDate,
-      parcelas: selectedParcelas,
-      metodoPagamento: metodoPagamento,
-    };
-
-    try {
-      console.log("DADOS", data);
-      Alert.alert("Venda cadastrada com sucesso!");
-      const result = await orderService.postOrder(data);
-      console.log("RESULTADO", result);
-      setDisableSalvar(false);
-    } catch (error) {
-      Alert.alert("Erro ao cadastrar venda!");
-      console.log("ERRO",error);
-    }
+      if(!selectedDate || !selectedClient || !selectedProduct || !metodoPagamento || !selectedParcelas){
+        Alert.alert("Preencha todos os campos!");
+        setDisableSalvar(false);
+        return;
+      }else {
+        const newOrder: OrderPost = {
+          dataDaVenda:selectedDate,
+          clienteInfo: selectedClient,
+          products: [selectedProduct],
+          metodoPagamento: metodoPagamento,
+          valorDaFicha: selectedProduct.valor,
+          parcelas: selectedParcelas,
+          datasVencimento: [],
+        }
+       
+        try {
+      
+          const result = await orderService.postOrder(newOrder);
+    
+          if(result){
+            Alert.alert("Venda cadastrada com sucesso!");
+          }
+    
+          setDisableSalvar(false);
+        } catch (error) {
+          Alert.alert("Erro ao cadastrar venda!");
+          console.log("ERRO",error);
+        }
+      }
+    
+ 
+  
   
   
   };
@@ -188,7 +197,7 @@ const OrderForm = () => {
                     {parcelas.map((parcela) => (
                       <Picker.Item
                         key={parcela}
-                        label={parcela}
+                        label={parcela.toString()}
                         value={parcela}
                       />
                     ))}

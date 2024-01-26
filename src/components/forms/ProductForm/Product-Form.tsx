@@ -23,16 +23,13 @@ const CadastroProdForm: React.FC<CadastroFormProps> = () => {
       )
       return;
     }
-    console.log("Nome:", nome);
-    console.log("valor:", valor);
-    console.log("quant:", quant);
+
 
    
     
     try {
       const promise = postProduct({nome, quant, valor}); 
       setDisabled(false); 
-      console.log("PROMISE",promise);
       setNome("");
       setValor(0);
       setQuant(0);

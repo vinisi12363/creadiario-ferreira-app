@@ -18,7 +18,7 @@ export const postUser = async (user:User) => {
 export const getUser = async () => {
     try {
         const user = await UserRepo.getUsers();
-        console.log("QUERY ON USER SERVICE", user)
+    
         return user;
     } catch (error) {
         throw error;

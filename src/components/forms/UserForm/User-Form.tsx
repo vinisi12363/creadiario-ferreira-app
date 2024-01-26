@@ -28,7 +28,7 @@ export const CadastroUser: React.FC<CadastroUserProps> = ({navigation}:any) => {
     setCpf("");
      const result = postUser(newDate);
      setUserId(result.toString());
-     console.log('userId',userId);
+   
       Alert.alert("Mensagem do sistema: ","Usuário cadastrado com sucesso!");
       navigation.navigate("Home");
      
