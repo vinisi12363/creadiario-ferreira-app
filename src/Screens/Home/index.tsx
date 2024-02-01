@@ -12,7 +12,7 @@ import {Alert} from 'react-native';
 
 export  const Home = ({navigation})=>{
     
-    const {client,fetchclient} = useClientContext();
+    const {fetchclient} = useClientContext();
     const {fetchProduct } = useProductContext();
     const {fetchOrder  } = useOrderContext();
     useEffect(()=>{
