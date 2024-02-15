@@ -6,11 +6,8 @@ import { useClientContext } from "../../../Context/ClientContext";
 import { useProductContext } from "../../../Context/ProductContext";
 import { ProductPicker } from "./ProductPicker";
 import * as orderService from "../../../Services/Order-service";
-import * as OrderRepo from "../../../Repository/Order-repository";
-import * as ClientRepo from "../../../Repository/Client-repository";
 import { Order, OrderPost } from "../../../Models/Order";
-import { Produto } from "../../../Models/Produto";
-import { Cliente } from "../../../Models/Cliente";
+import { SubTitle } from "../../../Screens/Home/layout";
 
 import {
   Container,
@@ -94,8 +91,14 @@ const OrderForm = () => {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
+  
     if (selectedDate !== undefined) {
       setShow(false);
+      const today = date;
+      if (selectedDate > today) {
+        Alert.alert("Data inválida!", "A data da venda tem que ser menor que a data de hoje!");
+        return;
+      }
       setDate(selectedDate);
       setSelectedDate(selectedDate.toISOString().split("T")[0]);
     } else {
@@ -116,6 +119,7 @@ const OrderForm = () => {
     <Container>
       <FormContainer>
         <FormTitle>Lançamento de Vendas</FormTitle>
+        {date?.toISOString()?  (<SubTitle textSyze="15px">venda: {date.toISOString().split("T")[0]}</SubTitle>) : <SubTitle textSyze="15px">Escolha a data da venda!</SubTitle>}
 
         <SafeAreaView>
           <DateButton onPress={showDatepicker}>

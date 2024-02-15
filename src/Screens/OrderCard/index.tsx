@@ -1,41 +1,114 @@
-import { Container ,  Title, SubTitle, CardView, Touchable} from "./layout";
-import { View } from "react-native";
-import { Header } from "../../components/Header/Header";
+import { SubTitle, Touchable, Title, Button } from "./layout";
 import { useOrderContext } from "../../Context/OrderContext";
-import { getOrders } from "../../Services/Order-service";
-import { useEffect } from "react";
+import { SafeAreaView, FlatList } from "react-native";
+import { Order } from "../../Models/Order";
+import { useState } from "react";
+import { Container } from "./layout";
 
-export const OrderCards = ({navigation})=>{
+type ItemProps = {
+  item: Order;
+  navigation: any;
+  chooseOrderCard: (orderData: any) => void;
+};
 
+const Item = ({ item, navigation, chooseOrderCard }: ItemProps) => {
+  return (
+    <Touchable
+      key={item.orderId}
+      onPress={() => {
+        chooseOrderCard(item), navigation.navigate("OrderCardScreen");
+      }}
+    >
+      <SubTitle
+        textSize="25px"
+        textColor="purple"
+      >{`data da venda: ${item.dataDaVenda}`}</SubTitle>
+      <SubTitle
+        textSize="25px"
+        textColor="black"
+      >{` nome do cliente: ${item.clienteInfo.nome}`}</SubTitle>
+      <SubTitle
+        textSize="25px"
+        textColor="black"
+      >{`endereço: ${item.clienteInfo.endereco}`}</SubTitle>
+      <SubTitle
+        textSize="25px"
+        textColor="black"
+      >{`valor devido: R$ ${item.valorDaFicha},00`}</SubTitle>
+    </Touchable>
+  );
+};
 
-    const {order} = useOrderContext();
-    console.log("oRDERS LOADED",order);
+export const OrderCards = ({ navigation }) => {
+  const { order, chooseOrderCard } = useOrderContext();
+  const [filteredOrder, setFilteredOrder] = useState<Order[]>(order._j);
+  console.log("FILTRADO", filteredOrder);
 
-    const callOrderScreen = () => {
-        navigation.navigate("Order");
-    }
-    return(
-    
-    <>
-       
-            
-        <Container>
-        {order? (
-            order._j.map((o) => {
+  const orderByDebitValue = (order: Order[]) => {
+    const neworder = [...order].sort((a, b) => {
+      return b.valorDaFicha - a.valorDaFicha;
+    });
+    console.log("neworder", neworder);
+    setFilteredOrder(neworder);
+  };
+  const orderByDate = (order: Order[]) => {
+    const neworder = [...order].sort((a, b) => {
+      return (
+        new Date(b.dataDaVenda).getTime() - new Date(a.dataDaVenda).getTime()
+      );
+    });
+    setFilteredOrder(neworder);
+  };
+  const orderByAddress = (order: Order[]) => {
+    const newOrder = [...order].sort((a, b) => {
+      if (a.clienteInfo.endereco < b.clienteInfo.endereco) {
+        return -1;
+      }
+      if (a.clienteInfo.endereco > b.clienteInfo.endereco) {
+        return 1;
+      }
+      return 0;
+    });
+    setFilteredOrder(newOrder);
+  };
 
-                return (
-                    <Touchable key={o.id}>
-                       <SubTitle>{` nome: ${o.clienteInfo.nome}`}</SubTitle>
-                       <SubTitle>{`endereço: ${o.clienteInfo.endereco}`}</SubTitle>
-                       <SubTitle>{`valor devido: R$ ${o.valorDaFicha},00`}</SubTitle>
-                       <SubTitle>{`data da venda: ${o.dataDaVenda}`}</SubTitle>
-                    </Touchable>
-                )
-            })
-         ) : <SubTitle>Não há fichas cadastradas</SubTitle>}
-
-        </Container>
-
-    </>
-    );
-}
+  return (
+    <Container>
+      <SafeAreaView>
+        <Title textSize="25px" textColor="white">
+          {" "}
+          Fichas de vendas
+        </Title>
+        <Button
+          onPress={() => {
+            orderByDate(filteredOrder);
+          }}
+          title="vendas por data"
+        ></Button>
+        <Button
+          onPress={() => {
+            orderByAddress(filteredOrder);
+          }}
+          title="vendas por endereço"
+        ></Button>
+        <Button
+          onPress={() => {
+            orderByDebitValue(filteredOrder);
+          }}
+          title="vendas por valor devido"
+        ></Button>
+        <FlatList
+          data={filteredOrder}
+          renderItem={({ item }) => (
+            <Item
+              navigation={navigation}
+              chooseOrderCard={chooseOrderCard}
+              item={item}
+            ></Item>
+          )}
+          keyExtractor={(item) => item.orderId}
+        ></FlatList>
+      </SafeAreaView>
+    </Container>
+  );
+};

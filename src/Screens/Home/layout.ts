@@ -3,6 +3,10 @@ import { StatusBar } from "react-native";
 
 const barHeight = StatusBar.currentHeight;
 
+type textSizeProps = {
+    textSyze: string;
+}
+
 export const Container = styled.View`
     flex: 1;
     padding-top: ${barHeight}px;
@@ -23,8 +27,9 @@ export const Touchable = styled.TouchableOpacity`
     margin-bottom: 10px;
 
 `
-export const TouchableText = styled.Text`
-    font-size: 20px;
+export const TouchableText = styled.Text<textSizeProps>`
+    font-size: ${props => props.textSyze};
+    font-family: 'Roboto';
     font-weight: bold;
     color: #000;
     margin-bottom: 20px;
@@ -38,8 +43,8 @@ export const Title = styled.Text`
     text-decoration: underline;
     margin-bottom: 20px;
 `
-export const SubTitle = styled.Text`
-    font-size: 30px;
+export const SubTitle = styled.Text<textSizeProps>`
+    font-size: ${props => props.textSyze};
     font-weight: bold;
     color: #fff;
     margin-bottom: 20px;

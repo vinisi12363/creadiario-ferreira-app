@@ -55,21 +55,21 @@ export  const Home = ({navigation})=>{
             
         <Container>
             <Title>Crediário Ferreira</Title>
-            <SubTitle>Escolha uma opção: </SubTitle>
+            <SubTitle textSyze="35px">Escolha uma opção: </SubTitle>
             
             <Touchable key="Clients" onPress={()=>{callClientsScreen()}}>
-                <TouchableText >Cadastrar Cliente</TouchableText>
+                <TouchableText textSyze="40px">Cadastrar Cliente</TouchableText>
             </Touchable>
         
             <Touchable key="Products" onPress={()=>{callProductsScreen()}}>
-                <TouchableText>Cadastrar Produtos</TouchableText>
+                <TouchableText textSyze="40px">Cadastrar Produtos</TouchableText>
             </Touchable>
             <Touchable key="Order" onPress={()=>{callOrderScreen()}}>
-                <TouchableText>Lançar Ficha</TouchableText>
+                <TouchableText textSyze="40px">Lançar Ficha</TouchableText>
             </Touchable>
 
             <Touchable key="OrderCards" onPress={()=>{callOrderCardsScreen()}}>
-                <TouchableText>Consultar Fichas</TouchableText>
+                <TouchableText textSyze="40px">Consultar Fichas</TouchableText>
             </Touchable>
             
         </Container>

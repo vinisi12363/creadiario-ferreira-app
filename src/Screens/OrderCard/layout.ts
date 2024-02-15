@@ -3,6 +3,12 @@ import { StatusBar } from "react-native";
 
 const barHeight = StatusBar.currentHeight;
 
+type texSizeProps = {
+    textSize: string;
+    textColor: string;
+
+
+}
 export const Container = styled.View`
     flex: 1;
     padding-top: ${barHeight}px;
@@ -25,12 +31,12 @@ export const CardView = styled.View`
 
 `
 export const Touchable = styled.TouchableOpacity`
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: lightblue;
+    border-radius: 25px;
     padding: 10px;
     margin-bottom: 10px;
     min-width: 90%;
-    border: 3px solid #000;
+    border: 5px solid #000;
     margin-top: 10px;
     margin-bottom: 10px;
 
@@ -43,17 +49,17 @@ export const TouchableText = styled.Text`
     text-align: center;
 
 `
-export const Title = styled.Text`
-    font-size: 50px;
+export const Title = styled.Text<texSizeProps>`
+    font-size: ${props => props.textSize};
     font-weight: bold;
-    color: #fff;
+    color: ${props => props.textColor};
     text-decoration: underline;
     margin-bottom: 20px;
 `
-export const SubTitle = styled.Text`
-    font-size: 30px;
+export const SubTitle = styled.Text <texSizeProps>`
+    font-size:  ${props => props.textSize};
     font-weight: bold;
-    color: #000;
+    color: ${props => props.textColor};
     margin-bottom: 20px;
 
 `

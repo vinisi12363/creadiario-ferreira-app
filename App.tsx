@@ -2,6 +2,7 @@ import { Client } from "./src/Screens/Clientes";
 import { Home } from "./src/Screens/Home";
 import { LoginScreen } from "./src/Screens/Auth";
 import { SignUpScreen } from "./src/Screens/SignUp";
+import {OrderCardScreen} from './src/Screens/OrderScreen';
 import { Produto } from "./src/Screens/Produtos";
 import { Order } from "./src/Screens/Pedidos";
 import { NavigationContainer } from "@react-navigation/native";
@@ -38,16 +39,19 @@ export default function App() {
                   component={Home}
                 ></Stack.Screen>
                 <Stack.Screen 
-                  name="Clients" 
+                  options={{ headerShown: false }}
+                    name="Clients" 
                   component={Client}>
 
                   </Stack.Screen>
                 <Stack.Screen
+                     options={{ headerShown: false }}
                   name="Products"
                   component={Produto}
                 ></Stack.Screen>
                 
                 <Stack.Screen
+                  options={{ headerShown: false }}
                   name="Order" 
                   component={Order}>
                   
@@ -55,6 +59,13 @@ export default function App() {
                 <Stack.Screen
                   name="OrderCards" 
                   component={OrderCards}>
+                </Stack.Screen>
+
+                <Stack.Screen 
+                  options={{ headerShown: false }}
+                  name="OrderCardScreen" 
+                  component={OrderCardScreen}>
+
                 </Stack.Screen>
               </Stack.Navigator>
             </NavigationContainer>

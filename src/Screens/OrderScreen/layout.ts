@@ -2,6 +2,11 @@ import styled from "styled-components/native";
 import { StatusBar } from "react-native";
 
 const barHeight = StatusBar.currentHeight;
+type texSizeProps = {
+    textSize: string;
+    textColor: string;
+
+}
 
 export const Container = styled.View`
     flex: 1;
@@ -43,17 +48,17 @@ export const TouchableText = styled.Text`
     text-align: center;
 
 `
-export const Title = styled.Text`
-    font-size: 50px;
+export const Title = styled.Text<texSizeProps>`
+    font-size: ${props => props.textSize};
     font-weight: bold;
-    color: #fff;
-    text-decoration: underline;
+    color:  ${props => props.textColor};
+    text-decoration: none;
     margin-bottom: 20px;
 `
-export const SubTitle = styled.Text`
-    font-size: 30px;
+export const SubTitle = styled.Text<texSizeProps>`
+    font-size:  ${props => props.textSize};
     font-weight: bold;
-    color: #000;
+    color: ${props => props.textColor};
     margin-bottom: 20px;
 
 `
