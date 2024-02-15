@@ -20,8 +20,8 @@ export const FormContainer = styled.View`
     min-width: 100%;
     Align-items: center;
     justify-content: start;
-    padding: 20px;
-    background-color: #13747d;
+    padding: 0px;
+    background-color: #0f172a;
 `
 export const FormArea = styled.View`
     flex:1;
@@ -32,8 +32,9 @@ export const FormArea = styled.View`
     justify-content: start;
     position:relative;
     bottom:10%;
-    padding: 3px;
-    background-color: #d7d8c5;
+    padding: 13px;
+    margin-top: 0px;
+    background-color: white;
 `
 export const TextInput = styled.TextInput`
     background-color: #fff;
@@ -50,9 +51,14 @@ export const Title = styled.Text`
     margin-bottom: 10px;
 `
 export  const FormTitle = styled.Text`
-    font-size: 40px;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Roboto';
+    padding: 40px;
     font-weight: bold;
     position:relative;
+    border 5px solid #fff;
+    width: 100%;
     bottom:0%;
     color: #fff;
     margin-bottom: 20px;

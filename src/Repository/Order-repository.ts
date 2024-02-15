@@ -1,36 +1,18 @@
 import { collection, getDocs, addDoc, query , where } from "firebase/firestore"; 
 import { db } from "../Services/fireStore";
-
+import { Order, OrderPost } from "../Models/Order";
 
 const OrdersCollection = collection(db, "Orders");
 
-export type Order = {
-    cliente: { id:string, nome:string, endereco:string },
-    produto: { id:string , nome:string, valor:number },
-    valueOfOrder:number,
-    data:string,
-    parcelas:string,
-    metodoPagamento:string,
+export const postOrder= async (order : OrderPost) => {
 
-}
-
-export const postOrder= async (order : Order) => {
     try {
         const docRef = await addDoc(OrdersCollection, {
-            nomeCliente : order.cliente.nome,
-            enderecoCliente: order.cliente.endereco,
-            idCliente: order.cliente.id,
-            nomeProduto: order.produto.nome,
-            valorProduto: order.produto.valor,
-            idProduto: order.produto.id,
-            valorTotal: order.valueOfOrder,
-            dataDaVenda: order.data,
-            parcelas: order.parcelas,
-            metodoPagamento: order.metodoPagamento,
+            order
         
     });
 
-    console.log("Document written with ID: ", docRef.id);
+  
     return docRef.id;
     } catch (e) {
     console.error("Error adding document: ", e);
@@ -38,20 +20,23 @@ export const postOrder= async (order : Order) => {
 }
 
 export const getOrders = async ()=>{
-        console.log("GET Orders")
+       
         const result =  await getDocs(OrdersCollection);    
          let data = [];
+        
         result.forEach((doc) => {
-        
-        console.log(`${doc.id} => nome: ${doc.data().nome} endereco: ${doc.data().endereco}`);
-         const Orderdata = {
-            docId:doc.id,
-            nome: doc.data().nome,
-            endereco: doc.data().endereco,
-            telefone: doc.data().telefone,
+         const Orderdata:Order = {
+            dataDaVenda: doc.data().order.dataDaVenda,
+            datasVencimento: doc.data().order.datasVencimento,
+            orderId: doc.data().order.docId,
+            clienteInfo: doc.data().order.clienteInfo,
+            products: doc.data().order.products,
+            valorDaFicha: doc.data().order.valorDaFicha,
+            parcelas: doc.data().order.parcelas,
+            metodoPagamento: doc.data().order.metodoPagamento,
         }
+
         data.push(Orderdata);
-        
         })
         return data;
 } 
@@ -62,7 +47,7 @@ export const getOrdersByOrderId = async (orderId:string)=>{
         const result = await getDocs(q);
         let data = [];
         result.forEach((doc) => {
-            console.log(`Order id => ${doc.id}`);
+         
             const Orderdata = {
                 docId:doc.id,
                

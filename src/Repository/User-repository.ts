@@ -16,7 +16,7 @@ export const postUser = async (user: User) => {
         funcionario: true
     });
 
-    console.log("Document written with ID: ", docRef.id);
+   
     return docRef.id;
     } catch (e) {
     console.error("Error adding document: ", e);
@@ -28,7 +28,7 @@ export const getUsers = async ()=>{
          let data = [];
         result.forEach((doc) => {
         
-        console.log(`${doc.id} => nome: ${doc.data().nome} admin: ${doc.data().admin}`);
+    
          const userdata = {
             docId:doc.id,
             nome: doc.data().nome,

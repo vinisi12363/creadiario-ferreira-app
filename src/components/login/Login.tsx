@@ -20,9 +20,9 @@ export const Login = ({navigation}:any)=>{
                 try {
                     Alert.alert("CredApp", "Carregando ...");
                     const result  = await getUserByCpf(userCpf)
-                    console.log("result", result)
+               
                     if(result !== null){
-                        Alert.alert("Bem vindo ao sistema", "Login realizado com sucesso");
+                        setTimeout(()=>{Alert.alert("Bem vindo ao sistema", "Login realizado com sucesso")}, 1000);
                         fetchUser(result);
                         callHomeScreen();
                     }

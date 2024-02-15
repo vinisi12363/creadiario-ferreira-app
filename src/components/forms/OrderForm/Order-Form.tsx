@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import { Alert } from "react-native";
-import { SafeAreaView } from "react-native";
+import { Alert, SafeAreaView } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useClientContext } from "../../../Context/ClientContext";
 import { useProductContext } from "../../../Context/ProductContext";
 import { ProductPicker } from "./ProductPicker";
 import * as orderService from "../../../Services/Order-service";
-import { Order } from "../../../Repository/Order-repository";
-
-
-
+import { Order, OrderPost } from "../../../Models/Order";
+import { SubTitle } from "../../../Screens/Home/layout";
 
 import {
   Container,
@@ -20,84 +17,95 @@ import {
   Button,
   FormArea,
   DateButton,
-  PlusBtn
+  // PlusBtn (unused import)
 } from "./OrderFormStyle";
 
 const OrderForm = () => {
-  const { client } = useClientContext();
+  const { client, fetchclient } = useClientContext();
   const { selectedProduct } = useProductContext();
 
   const [selectedClient, setSelectedClient] = useState({
     docId: "",
     nome: "",
+    cpf: "",
     endereco: "",
     telefone: "",
   });
 
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedParcelas, setSelectedParcelas] = useState<string>("");
+  const [selectedParcelas, setSelectedParcelas] = useState<number>(1);
   const [metodoPagamento, setMetodoPagamento] = useState<string>("");
   const [disableSalvar, setDisableSalvar] = useState<boolean>(false);
 
-  const parcelas = [
-    "2x",
-    "3x",
-    "4x",
-    "5x",
-    "6x",
-    "7x",
-    "8x",
-    "9x",
-    "10x",
-    "11x",
-    "12x",
-  ];
+  const parcelas = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-  const setarDados = async ()  => {
-   setDisableSalvar(true);
-    const data: Order = {
-      cliente: {
-        id: selectedClient.docId,
-        nome: selectedClient.nome,
-        endereco: selectedClient.endereco,
-      },
-      produto: {
-        id: selectedProduct.docId,
-        nome: selectedProduct.nome,
-        valor: selectedProduct.valor,
-      },
-      valueOfOrder: selectedProduct.valor,
-      data: selectedDate,
-      parcelas: selectedParcelas,
-      metodoPagamento: metodoPagamento,
-    };
+  const setarDados = async () => {
+    setDisableSalvar(true);
 
     try {
-      console.log("DADOS", data);
-      Alert.alert("Venda cadastrada com sucesso!");
-      const result = await orderService.postOrder(data);
-      console.log("RESULTADO", result);
-      setDisableSalvar(false);
+      if (
+        !selectedDate ||
+        !selectedClient ||
+        !selectedProduct ||
+        !metodoPagamento ||
+        !selectedParcelas
+      ) {
+        throw new Error("Preencha todos os campos!");
+      }
+
+      const newOrder: OrderPost = {
+        dataDaVenda: selectedDate,
+        clienteInfo: selectedClient,
+        products: [selectedProduct],
+        metodoPagamento: metodoPagamento,
+        valorDaFicha: selectedProduct.valor,
+        parcelas: selectedParcelas,
+        datasVencimento: [],
+      };
+
+      const result = await orderService.postOrder(newOrder);
+
+      if (result) {
+        Alert.alert("Venda cadastrada com sucesso!");
+        setSelectedDate("");
+        setSelectedClient({
+          docId: "",
+          nome: "",
+          cpf: "",
+          endereco: "",
+          telefone: "",
+        });
+        setSelectedParcelas(1);
+        setMetodoPagamento("");
+      }
     } catch (error) {
-      Alert.alert("Erro ao cadastrar venda!");
-      console.log("ERRO",error);
+      Alert.alert("Erro ao cadastrar venda!", error.message || "Erro desconhecido");
+      console.error("Error in setarDados:", error);
+    } finally {
+      setDisableSalvar(false);
     }
-  
-  
   };
-
-
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-    setSelectedDate(currentDate.toISOString().split("T")[0]); 
+  
+    if (selectedDate !== undefined) {
+      setShow(false);
+      const today = date;
+      if (selectedDate > today) {
+        Alert.alert("Data inválida!", "A data da venda tem que ser menor que a data de hoje!");
+        return;
+      }
+      setDate(selectedDate);
+      setSelectedDate(selectedDate.toISOString().split("T")[0]);
+    } else {
+      setShow(false);
+    }
   };
+
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -107,11 +115,11 @@ const OrderForm = () => {
     showMode("date");
   };
 
-
   return (
     <Container>
       <FormContainer>
         <FormTitle>Lançamento de Vendas</FormTitle>
+        {date?.toISOString()?  (<SubTitle textSyze="15px">venda: {date.toISOString().split("T")[0]}</SubTitle>) : <SubTitle textSyze="15px">Escolha a data da venda!</SubTitle>}
 
         <SafeAreaView>
           <DateButton onPress={showDatepicker}>
@@ -150,10 +158,9 @@ const OrderForm = () => {
           {selectedClient.nome && (
             <>
               <Title>Produto:</Title>
-              <ProductPicker></ProductPicker>
-              
-              
-              {selectedProduct!== null && (
+              <ProductPicker />
+
+              {selectedProduct !== null && (
                 <>
                   <Title>Método de pagamento:</Title>
                   <Picker
@@ -166,7 +173,10 @@ const OrderForm = () => {
                     ></Picker.Item>
                     <Picker.Item label="à vista" value="avista" />
                     <Picker.Item label="crediário" value="crediario" />
-                    <Picker.Item label="cartão de crédito" value="cartao" />
+                    <Picker.Item
+                      label="cartão de crédito"
+                      value="cartao"
+                    />
                   </Picker>
                 </>
               )}
@@ -188,7 +198,7 @@ const OrderForm = () => {
                     {parcelas.map((parcela) => (
                       <Picker.Item
                         key={parcela}
-                        label={parcela}
+                        label={parcela.toString()}
                         value={parcela}
                       />
                     ))}
@@ -200,7 +210,7 @@ const OrderForm = () => {
         </FormArea>
 
         <Button disabled={disableSalvar} onPress={() => setarDados()}>
-                      <Title>Salvar</Title>
+          <Title>Salvar</Title>
         </Button>
       </FormContainer>
     </Container>
