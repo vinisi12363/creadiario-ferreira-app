@@ -7,7 +7,10 @@ type texSizeProps = {
     textSize: string;
     textColor: string;
 
+}
 
+type buttonProps = {
+    isPressed: boolean;
 }
 export const Container = styled.View`
     flex: 1;
@@ -63,14 +66,21 @@ export const SubTitle = styled.Text <texSizeProps>`
     margin-bottom: 20px;
 
 `
-
-export const Button = styled.Button`
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 10px;
+export const FilterArea = styled.View`
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 20px;
+    margin-bottom: 20px;
+`
+export const FilterButton = styled.TouchableOpacity<buttonProps>`
+    min-width: 25%;
+    background: ${props => props.isPressed? '#ffffff' :'#0e9e9a'} ;
+    border-radius: 15px;
     margin-bottom: 10px;
-    min-width: 90%;
     border: 1px solid #ccc;
-
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    border: 4px solid #000;
 
 `

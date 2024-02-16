@@ -8,6 +8,7 @@ import { ProductPicker } from "./ProductPicker";
 import * as orderService from "../../../Services/Order-service";
 import { Order, OrderPost } from "../../../Models/Order";
 import { SubTitle } from "../../../Screens/Home/layout";
+import { productServices } from "../../../Services/Product-service";
 
 import {
   Container,
@@ -36,12 +37,12 @@ const OrderForm = () => {
   const [selectedParcelas, setSelectedParcelas] = useState<number>(1);
   const [metodoPagamento, setMetodoPagamento] = useState<string>("");
   const [disableSalvar, setDisableSalvar] = useState<boolean>(false);
-
-  const parcelas = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const [duplicatas, setDuplicatas] = useState<object[]>([]); 
+  const parcelas = [1,2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   const setarDados = async () => {
     setDisableSalvar(true);
-
+    let datasDuplicatas = []; 
     try {
       if (
         !selectedDate ||
@@ -52,7 +53,28 @@ const OrderForm = () => {
       ) {
         throw new Error("Preencha todos os campos!");
       }
-
+    
+      if(metodoPagamento==="crediario"){
+         let newObjDuplicatas = [] ;
+          for (let i = 0; i < selectedParcelas; i++) {
+            const data = new Date(selectedDate);
+            data.setMonth(data.getMonth() + i);
+            datasDuplicatas.push(data.toISOString().split("T")[0]);
+            
+           
+            
+              newObjDuplicatas.push( 
+                {
+                  dataDuplicata: data.toISOString().split("T")[0],
+                  valorDuplicata: ((selectedProduct.valor/selectedParcelas)
+                   + 
+                  (selectedProduct.valor * 0.03))
+                }
+              )
+          
+          }
+      }
+      
       const newOrder: OrderPost = {
         dataDaVenda: selectedDate,
         clienteInfo: selectedClient,
@@ -60,13 +82,14 @@ const OrderForm = () => {
         metodoPagamento: metodoPagamento,
         valorDaFicha: selectedProduct.valor,
         parcelas: selectedParcelas,
-        datasVencimento: [],
+        duplicatas: duplicatas,
       };
 
       const result = await orderService.postOrder(newOrder);
 
       if (result) {
         Alert.alert("Venda cadastrada com sucesso!");
+        productServices.updateStock(selectedProduct);
         setSelectedDate("");
         setSelectedClient({
           docId: "",

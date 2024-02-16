@@ -1,4 +1,4 @@
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc , doc} from "firebase/firestore";
 import { db } from "../Services/fireStore";
 
 const productsCollection = collection(db, "produtos");
@@ -21,6 +21,18 @@ export const postProduct = async (Product) => {
     console.error("Error adding document: ", e);
   }
 };
+
+export const downStock = async (Product) => {
+  const {docId, quantidade} = Product;
+  console.log ("docid, quant", docId , quantidade);
+  const updateProd = doc(db, "produtos", docId);
+  try {
+    const result = await updateDoc(updateProd, {quant : quantidade - 1})
+    console.log ("update result", result);
+  } catch (error) {
+    console.error("Error updating document: ", error);
+  }
+}
 
 export const getProducts = async () => {
   const result = await getDocs(productsCollection);

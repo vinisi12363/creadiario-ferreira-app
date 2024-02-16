@@ -4,7 +4,7 @@ import { useClientContext } from "../../Context/ClientContext";
 import { useProductContext } from "../../Context/ProductContext";
 import { useOrderContext } from "../../Context/OrderContext";
 import { getclients } from "../../Services/Client-service";
-import { getproducts } from "../../Services/Product-service";
+import { productServices } from "../../Services/Product-service";
 import { getOrders } from "../../Services/Order-service";
 import { useEffect } from "react";
 import {Alert} from 'react-native';
@@ -19,7 +19,7 @@ export  const Home = ({navigation})=>{
         Alert.alert("CredApp" , "Carregando ...");
         try {
             const result = getclients();
-            const loadProducts = getproducts();
+            const loadProducts = productServices.getproducts();
             const loadOrders = getOrders();
             if(loadOrders){
                 fetchOrder(loadOrders);

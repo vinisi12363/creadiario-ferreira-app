@@ -2,7 +2,7 @@ import * as productRepo from '../Repository/Product-repository';
 import {Alert} from 'react-native';
 
 
-export const postProduct = async (product) => {
+ const postProduct = async (product) => {
     
     try {
         const { prod_id } =   await productRepo.postProduct(product);
@@ -16,12 +16,26 @@ export const postProduct = async (product) => {
 
 }
 
+ const updateStock = async (product) => {
+    try {
+        await productRepo.downStock(product);
+    } catch (error) {
+        throw error;
+    }
 
-export const getproducts = async () => {
+}
+
+const getproducts = async () => {
     try {
         return await productRepo.getProducts();
     } catch (error) {
         throw error;
     }
+}
+
+export const productServices = {
+    postProduct,
+    updateStock,
+    getproducts
 }
 

@@ -1,4 +1,4 @@
-import { SubTitle, Touchable, Title, Button } from "./layout";
+import { SubTitle, Touchable, Title, FilterButton, FilterArea } from "./layout";
 import { useOrderContext } from "../../Context/OrderContext";
 import { SafeAreaView, FlatList } from "react-native";
 import { Order } from "../../Models/Order";
@@ -42,6 +42,9 @@ const Item = ({ item, navigation, chooseOrderCard }: ItemProps) => {
 export const OrderCards = ({ navigation }) => {
   const { order, chooseOrderCard } = useOrderContext();
   const [filteredOrder, setFilteredOrder] = useState<Order[]>(order._j);
+  const [btnDataPressed, setBtnDataPressed] = useState(false);
+  const [btnAddressPressed, setBtnAddressPressed] = useState(false);
+  const [btnDebitPressed, setBtnDebitPressed] = useState(false);
   console.log("FILTRADO", filteredOrder);
 
   const orderByDebitValue = (order: Order[]) => {
@@ -75,28 +78,40 @@ export const OrderCards = ({ navigation }) => {
   return (
     <Container>
       <SafeAreaView>
-        <Title textSize="25px" textColor="white">
+        <SubTitle textSize="45px" textColor="white">
           {" "}
           Fichas de vendas
-        </Title>
-        <Button
-          onPress={() => {
-            orderByDate(filteredOrder);
-          }}
-          title="vendas por data"
-        ></Button>
-        <Button
-          onPress={() => {
-            orderByAddress(filteredOrder);
-          }}
-          title="vendas por endereço"
-        ></Button>
-        <Button
-          onPress={() => {
-            orderByDebitValue(filteredOrder);
-          }}
-          title="vendas por valor devido"
-        ></Button>
+        </SubTitle>
+        <SubTitle textColor="white" textSize="25px">Filtrar por:{`${btnDataPressed? " Data" : btnAddressPressed? " Endereço" : btnDebitPressed? " Débito " : ""}`}</SubTitle>
+        <FilterArea>
+          <FilterButton
+            onPress={() => {
+              orderByDate(filteredOrder);
+              setBtnDataPressed(true);
+              setBtnAddressPressed(false);
+              setBtnDebitPressed(false);
+            }}
+            isPressed={btnDataPressed}
+          ><SubTitle textColor="black" textSize="15px">Data</SubTitle></FilterButton>
+          <FilterButton
+            onPress={() => {
+              orderByAddress(filteredOrder);
+              setBtnDataPressed(false);
+              setBtnAddressPressed(true);
+              setBtnDebitPressed(false);
+            }}
+            isPressed={btnAddressPressed}
+          ><SubTitle textColor="black" textSize="15px">Endereço</SubTitle></FilterButton>
+          <FilterButton
+            onPress={() => {
+              orderByDebitValue(filteredOrder);
+              setBtnDataPressed(false);
+              setBtnAddressPressed(false);
+              setBtnDebitPressed(true);
+            }}
+            isPressed={btnDebitPressed}
+          ><SubTitle textColor="black" textSize="15px">Débito</SubTitle></FilterButton>
+        </FilterArea>
         <FlatList
           data={filteredOrder}
           renderItem={({ item }) => (

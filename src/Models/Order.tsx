@@ -19,6 +19,6 @@ export type OrderPost = {
     metodoPagamento: string;
     valorDaFicha: number;
     parcelas:number;
-    datasVencimento: string[]
+    duplicatas: object[]
 
 }
